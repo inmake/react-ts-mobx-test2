@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ModalStore from "../stores/ModalStore";
 
 function Modal() {

@@ -56,8 +56,7 @@ class FolderStore {
   updateSelectedFolderId(id: number) {
     this.selectedFolderId = id;
     MailStore.removeSelectedMailIds();
-    MailStore.searchQuery = "";
-    MailStore.searchedMails = [];
+    MailStore.setSearchQuery("");
   }
 
   addFolder(name: string) {
@@ -65,8 +64,6 @@ class FolderStore {
       ...this.folders,
       { id: Math.floor(Date.now() / 1000), name },
     ];
-
-    console.log(this.folders);
   }
 
   updateFolder(id: number, name: string) {

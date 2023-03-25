@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import FolderStore from "../../stores/FolderStore";
 import ModalStore from "../../stores/ModalStore";
 

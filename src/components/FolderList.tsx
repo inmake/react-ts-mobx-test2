@@ -1,6 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { observer } from "mobx-react-lite";
-import React from "react";
 import FolderStore from "../stores/FolderStore";
 import ModalStore from "../stores/ModalStore";
 import FolderItem from "./FolderItem";
