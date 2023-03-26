@@ -65,10 +65,6 @@ class MailStore {
     }
   }
 
-  get getSelectedMailIds() {
-    return this.selectedMailIds;
-  }
-
   toggleSelectedMailIds(id: number) {
     if (this.selectedMailIds.includes(id)) {
       this.selectedMailIds = this.selectedMailIds.filter(
@@ -134,6 +130,17 @@ class MailStore {
     this.mails = this.mails.map((mail) =>
       mail.id === id ? { ...mail, viewed: true } : mail
     );
+  }
+
+  markViewedSelectedMails() {
+    for (const selectedMailId of this.selectedMailIds) {
+      this.mails = this.mails.map((mail) =>
+        mail.id === selectedMailId ? { ...mail, viewed: true } : mail
+      );
+    }
+
+    this.clearSelectedMailIds();
+    this.clearSearchQuery();
   }
 }
 

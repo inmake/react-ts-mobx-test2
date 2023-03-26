@@ -9,10 +9,10 @@ function MailView({ id, author, body, date }: IMail) {
   return (
     <div className="space-y-8">
       <p className="text-xl">
-        Письмо от <span className="font-bold">{author}</span>
+        <span className="font-bold">{author}</span>
       </p>
       <p>{body}</p>
-      <p className="text-sm">{date}</p>
+      <p className="text-sm text-right">{date}</p>
     </div>
   );
 }

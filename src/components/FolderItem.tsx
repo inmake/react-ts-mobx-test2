@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import FolderStore from "../stores/FolderStore";
 import {
   CheckCircleIcon,
@@ -20,6 +20,7 @@ interface FolderProps {
 function FolderItem({ id, name, readonly, icon = "TagIcon" }: FolderProps) {
   const [edited, setEdited] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>(name);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { ...icons } = heroicons;
 
@@ -28,6 +29,12 @@ function FolderItem({ id, name, readonly, icon = "TagIcon" }: FolderProps) {
 
   function updateFolder(e: FormEvent) {
     e.preventDefault();
+
+    if (!newName.trim().length) {
+      setNewName("");
+      inputRef.current?.focus();
+      return;
+    }
 
     FolderStore.updateFolder(id, newName);
 
@@ -69,11 +76,13 @@ function FolderItem({ id, name, readonly, icon = "TagIcon" }: FolderProps) {
           onSubmit={updateFolder}
         >
           <input
+            ref={inputRef}
+            required
             type="text"
             className="w-full px-3 py-2 pr-1 text-left bg-blue-50 hover:bg-blue-100 transition-colors rounded-lg truncate"
             autoFocus
             value={newName}
-            onChange={(e) => setNewName(e.target.value)}
+            onChange={(e) => setNewName(e.target.value.replace(/\s+/g, " "))}
           />
 
           <button type="submit">

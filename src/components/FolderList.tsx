@@ -7,7 +7,7 @@ import FolderCreate from "./modals/FolderCreate";
 
 function FolderList() {
   return (
-    <div className="flex flex-col space-y-4 w-[250px] min-w-[250px]">
+    <div className="w-1/5 flex flex-col space-y-4">
       {FolderStore.folders.map((folder) => (
         <FolderItem
           key={folder.id}

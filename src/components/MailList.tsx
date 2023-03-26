@@ -3,13 +3,15 @@ import MailItem from "./MailItem";
 import { observer } from "mobx-react-lite";
 import MailStore from "../stores/MailStore";
 import FolderStore from "../stores/FolderStore";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 function MailList() {
   const searchQuery = MailStore.searchQuery;
   const searchedMails = MailStore.searchedMails;
   const mails = MailStore.mailsFolder;
-  const selectedMailIds = MailStore.getSelectedMailIds;
+  const selectedMailIds = MailStore.selectedMailIds;
   const folders = FolderStore.folders;
   const folderId = FolderStore.selectedFolderId;
   const folderName = FolderStore.getSelectedFolderName;
@@ -36,9 +38,13 @@ function MailList() {
     MailStore.removeSelectedMails();
   }
 
+  function markViewedSelectedMails() {
+    MailStore.markViewedSelectedMails();
+  }
+
   return (
-    <div className="w-full space-y-4">
-      <p className="text-xl">{folderName}</p>
+    <div className="w-4/5 space-y-4">
+      <p className="text-xl truncate">{folderName}</p>
       {MailStore.mailsFolder.length > 0 && (
         <>
           <input
@@ -79,10 +85,28 @@ function MailList() {
                   )}
                 </select>
                 <button
+                  data-tooltip-id="markViewedSelectedMails"
                   className="text-blue-500 hover:text-blue-600 transition-colors"
+                  onClick={markViewedSelectedMails}
+                >
+                  <EnvelopeOpenIcon className="w-5 h-5" />
+                  <Tooltip
+                    id="markViewedSelectedMails"
+                    content="Отметить как прочитанное"
+                    className="rounded-lg px-2.5 py-1"
+                  />
+                </button>
+                <button
+                  className="text-blue-500 hover:text-blue-600 transition-colors"
+                  data-tooltip-id="removeSelectedMails"
                   onClick={removeSelectedMails}
                 >
                   <TrashIcon className="w-5 h-5" />
+                  <Tooltip
+                    id="removeSelectedMails"
+                    content="Удалить"
+                    className="rounded-lg px-2.5 py-1"
+                  />
                 </button>
               </div>
             )}

@@ -6,9 +6,11 @@ import Modal from "./components/Modal";
 function App() {
   return (
     <>
-      <div className="container mx-auto xl:max-w-screen-xl px-4 py-8 flex space-x-8">
-        <FolderList></FolderList>
-        <MailList></MailList>
+      <div className="container mx-auto xl:max-w-screen-xl px-4 py-8">
+        <div className="flex space-x-8">
+          <FolderList></FolderList>
+          <MailList></MailList>
+        </div>
       </div>
 
       <Modal />
