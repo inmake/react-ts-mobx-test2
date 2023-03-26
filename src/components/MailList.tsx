@@ -66,11 +66,11 @@ function MailList() {
             )}
 
             {MailStore.selectedMailIds.length > 0 && (
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 w-full">
                 <select
                   defaultValue={0}
                   onChange={updateMailsFolder}
-                  className="px-2 py-1.5 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors"
+                  className="w-1/4 px-2 py-1.5 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors"
                 >
                   <option value="0" disabled>
                     Переместить в папку
