@@ -3,22 +3,23 @@ import MailItem from "./MailItem";
 import { observer } from "mobx-react-lite";
 import MailStore from "../stores/MailStore";
 import FolderStore from "../stores/FolderStore";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 function MailList() {
   const searchQuery = MailStore.searchQuery;
   const searchedMails = MailStore.searchedMails;
-  const mails = MailStore.getMailsFolder;
-  const selectedMails = MailStore.getSelectedMailIds;
+  const mails = MailStore.mailsFolder;
+  const selectedMailIds = MailStore.getSelectedMailIds;
   const folders = FolderStore.folders;
   const folderId = FolderStore.selectedFolderId;
   const folderName = FolderStore.getSelectedFolderName;
   const checkedAll = !searchQuery
-    ? mails.length === selectedMails.length
-    : searchedMails.length === selectedMails.length;
+    ? mails.length === selectedMailIds.length
+    : searchedMails.length === selectedMailIds.length;
 
   function updateMailsFolder(e: ChangeEvent<HTMLSelectElement>) {
     MailStore.updateMailsFolder(+e.target.value);
-    MailStore.removeSelectedMailIds();
+    MailStore.clearSelectedMailIds();
   }
 
   function toggleSelectAll() {
@@ -26,15 +27,19 @@ function MailList() {
   }
 
   function searchMails(e: ChangeEvent<HTMLInputElement>) {
-    MailStore.removeSelectedMailIds();
+    MailStore.clearSelectedMailIds();
     MailStore.searchMails(e.target.value);
-    MailStore.setSearchQuery(e.target.value);
+    MailStore.searchQuery = e.target.value;
+  }
+
+  function removeSelectedMails() {
+    MailStore.removeSelectedMails();
   }
 
   return (
     <div className="w-full space-y-4">
       <p className="text-xl">{folderName}</p>
-      {MailStore.getMailsFolder.length > 0 && (
+      {MailStore.mailsFolder.length > 0 && (
         <>
           <input
             type="search"
@@ -55,23 +60,31 @@ function MailList() {
             )}
 
             {MailStore.selectedMailIds.length > 0 && (
-              <select
-                defaultValue={0}
-                onChange={updateMailsFolder}
-                className="px-2 py-1.5 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors"
-              >
-                <option value="0" disabled>
-                  Переместить в папку
-                </option>
-                {folders.map(
-                  (folder) =>
-                    folder.id !== folderId && (
-                      <option key={folder.id} value={folder.id}>
-                        {folder.name}
-                      </option>
-                    )
-                )}
-              </select>
+              <div className="flex space-x-4">
+                <select
+                  defaultValue={0}
+                  onChange={updateMailsFolder}
+                  className="px-2 py-1.5 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors"
+                >
+                  <option value="0" disabled>
+                    Переместить в папку
+                  </option>
+                  {folders.map(
+                    (folder) =>
+                      folder.id !== folderId && (
+                        <option key={folder.id} value={folder.id}>
+                          {folder.name}
+                        </option>
+                      )
+                  )}
+                </select>
+                <button
+                  className="text-blue-500 hover:text-blue-600 transition-colors"
+                  onClick={removeSelectedMails}
+                >
+                  <TrashIcon className="w-5 h-5" />
+                </button>
+              </div>
             )}
           </div>
         </>

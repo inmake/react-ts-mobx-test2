@@ -1,3 +1,4 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent } from "react";
 import MailStore from "../stores/MailStore";
@@ -14,6 +15,7 @@ interface MailItemProps {
 
 function MailItem({ id, author, body, date, viewed }: MailItemProps) {
   const checked = MailStore.selectedMailIds.includes(id);
+  const convertedDate = `${date.slice(0, 5)} в ${date.slice(12, 17)}`;
 
   function toggleSelectedMailIds(e: ChangeEvent<HTMLInputElement>) {
     MailStore.toggleSelectedMailIds(id);
@@ -27,6 +29,10 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
     );
   }
 
+  function removeMail() {
+    MailStore.removeMail(id);
+  }
+
   return (
     <tr
       className={[
@@ -34,7 +40,7 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
         !viewed && "font-bold",
       ].join(" ")}
     >
-      <td className="w-1/12 p-2 border-t border-b border-gray-300">
+      <td className="w-[5%] p-2 border-t border-b border-gray-300">
         <input
           type="checkbox"
           className=""
@@ -43,22 +49,30 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
         />
       </td>
       <td
-        className="w-1/6 p-2 border-t border-b border-gray-300 truncate"
+        className="w-[15%] p-2 border-t border-b border-gray-300 truncate"
         onClick={viewMail}
       >
         {author}
       </td>
       <td
-        className="w-3/6 p-2 border-t border-b border-gray-300 truncate"
+        className="w-[60%] p-2 border-t border-b border-gray-300 truncate"
         onClick={viewMail}
       >
         {body}
       </td>
       <td
-        className="w-1/6 p-2 border-t border-b border-gray-300 truncate text-sm"
+        className="w-[15%] p-2 border-t border-b border-gray-300 truncate text-sm"
         onClick={viewMail}
       >
-        {date}
+        {convertedDate}
+      </td>
+      <td className="w-[5%] p-2 border-t border-b border-gray-300 truncate text-sm">
+        <button
+          className="text-blue-500 hover:text-blue-600 transition-colors"
+          onClick={removeMail}
+        >
+          <TrashIcon className="w-5 h-5" />
+        </button>
       </td>
     </tr>
   );

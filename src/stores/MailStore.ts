@@ -47,14 +47,14 @@ class MailStore {
     makeAutoObservable(this);
   }
 
-  get getMailsFolder() {
+  get mailsFolder() {
     const selectedFolderId = FolderStore.selectedFolderId;
     return this.mails.filter((mail) => mail.folderId === selectedFolderId);
   }
 
   get searchedMails() {
     if (this.searchQuery) {
-      return this.getMailsFolder.filter(
+      return this.mailsFolder.filter(
         (mail) =>
           mail.author.toLowerCase().includes(this.searchQuery) ||
           mail.body.toLowerCase().includes(this.searchQuery) ||
@@ -86,35 +86,48 @@ class MailStore {
       );
     }
 
-    this.setSearchQuery("");
+    this.clearSearchQuery();
   }
 
-  removeSelectedMailIds() {
+  clearSelectedMailIds() {
     this.selectedMailIds = [];
+  }
+
+  clearSearchQuery() {
+    this.searchQuery = "";
   }
 
   toggleSelectAllMailIds() {
     const selectedMails = !this.searchQuery
-      ? this.getMailsFolder
+      ? this.mailsFolder
       : this.searchedMails;
 
     if (selectedMails.length !== this.selectedMailIds.length) {
       this.selectedMailIds = selectedMails.map((mail) => mail.id);
     } else {
-      this.selectedMailIds = [];
+      this.clearSelectedMailIds();
     }
   }
 
-  removeMailsFromFolder(folderId: number) {
+  removeMail(id: number) {
+    this.mails = this.mails.filter((mail) => mail.id !== id);
+  }
+
+  removeSelectedMails() {
+    for (const selectedMailId of this.selectedMailIds) {
+      this.mails = this.mails.filter((mail) => mail.id !== selectedMailId);
+    }
+
+    this.clearSelectedMailIds();
+    this.clearSearchQuery();
+  }
+
+  removeAllMailsFromFolder(folderId: number) {
     this.mails = this.mails.filter((mail) => mail.folderId !== folderId);
   }
 
   searchMails(query: string) {
-    this.setSearchQuery(query);
-  }
-
-  setSearchQuery(query: string) {
-    this.searchQuery = query.toLowerCase();
+    this.searchQuery = query;
   }
 
   markViewed(id: number) {

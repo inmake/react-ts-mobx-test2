@@ -55,8 +55,8 @@ class FolderStore {
 
   updateSelectedFolderId(id: number) {
     this.selectedFolderId = id;
-    MailStore.removeSelectedMailIds();
-    MailStore.setSearchQuery("");
+    MailStore.clearSelectedMailIds();
+    MailStore.searchQuery = "";
   }
 
   addFolder(name: string) {
@@ -73,7 +73,7 @@ class FolderStore {
   }
 
   removeFolder(id: number) {
-    MailStore.removeMailsFromFolder(id);
+    MailStore.removeAllMailsFromFolder(id);
     this.folders = this.folders.filter((folder) => folder.id !== id);
   }
 }
