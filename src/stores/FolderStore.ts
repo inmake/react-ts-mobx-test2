@@ -62,7 +62,7 @@ class FolderStore {
   updateSelectedFolderId(id: number) {
     this.selectedFolderId = id;
     MailStore.clearSelectedMailIds();
-    MailStore.searchQuery = "";
+    MailStore.clearSearchQuery();
   }
 
   addFolder(name: string) {

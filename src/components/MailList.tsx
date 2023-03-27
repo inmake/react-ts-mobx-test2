@@ -9,16 +9,14 @@ import "react-tooltip/dist/react-tooltip.css";
 
 function MailList() {
   const searchQuery = MailStore.searchQuery;
-  const searchedMails = MailStore.searchedMails;
+  // const searchedMails = MailStore.searchedMails;
   const mails = MailStore.mailsFolder;
   const favoritesMails = MailStore.favoritesMails;
   const selectedMailIds = MailStore.selectedMailIds;
   const folders = FolderStore.folders;
   const folderId = FolderStore.selectedFolderId;
   const folderName = FolderStore.getSelectedFolderName;
-  const checkedAll = !searchQuery
-    ? mails.length === selectedMailIds.length
-    : searchedMails.length === selectedMailIds.length;
+  const checkedAll = mails.length === selectedMailIds.length;
 
   function updateMailsFolder(e: ChangeEvent<HTMLSelectElement>) {
     MailStore.updateMailsFolder(+e.target.value);
@@ -32,7 +30,7 @@ function MailList() {
   function searchMails(e: ChangeEvent<HTMLInputElement>) {
     MailStore.clearSelectedMailIds();
     MailStore.searchMails(e.target.value);
-    MailStore.searchQuery = e.target.value;
+    MailStore.setSearchQuery(e.target.value);
   }
 
   function removeSelectedMails() {
@@ -46,18 +44,19 @@ function MailList() {
   return (
     <div className="w-4/5 space-y-4">
       <p className="text-xl truncate">{folderName}</p>
-      {MailStore.mailsFolder.length > 0 && (
-        <>
-          <input
-            type="search"
-            placeholder="Поиск в почте"
-            className="px-3 py-2 border border-gray-300 hover:border-blue-500 transition-colors rounded-lg w-full"
-            value={searchQuery}
-            onChange={searchMails}
-          />
-          <div className="flex p-2 space-x-8">
-            {((mails.length > 0 && !searchQuery) ||
-              searchedMails.length > 0) && (
+
+      <input
+        type="search"
+        placeholder="Поиск в почте"
+        className="px-3 py-2 border border-gray-300 hover:border-blue-500 transition-colors rounded-lg w-full"
+        value={searchQuery}
+        onChange={searchMails}
+      />
+
+      <div className="flex p-2 space-x-8">
+        {mails.length > 0 && (
+          <>
+            {folderId !== 6 && (
               <input
                 type="checkbox"
                 className="my-3"
@@ -65,7 +64,6 @@ function MailList() {
                 onChange={toggleSelectAll}
               />
             )}
-
             {MailStore.selectedMailIds.length > 0 && (
               <div className="flex space-x-4 w-full">
                 <select
@@ -112,54 +110,37 @@ function MailList() {
                 </button>
               </div>
             )}
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
 
       <table className="table-fixed w-full border-collapse text-left">
         <tbody>
-          {MailStore.searchedMails.length > 0 || searchQuery !== "" ? (
-            MailStore.searchedMails.map((mail) => (
-              <MailItem
-                key={mail.id}
-                id={mail.id}
-                folderId={mail.folderId}
-                author={mail.author}
-                body={mail.body}
-                date={mail.date}
-                viewed={mail.viewed}
-                favorites={mail.favorites}
-              />
-            ))
-          ) : (
-            <>
-              {folderId !== 6
-                ? mails.map((mail) => (
-                    <MailItem
-                      key={mail.id}
-                      id={mail.id}
-                      folderId={mail.folderId}
-                      author={mail.author}
-                      body={mail.body}
-                      date={mail.date}
-                      viewed={mail.viewed}
-                      favorites={mail.favorites}
-                    />
-                  ))
-                : favoritesMails.map((mail) => (
-                    <MailItem
-                      key={mail.id}
-                      id={mail.id}
-                      folderId={mail.folderId}
-                      author={mail.author}
-                      body={mail.body}
-                      date={mail.date}
-                      viewed={mail.viewed}
-                      favorites={mail.favorites}
-                    />
-                  ))}
-            </>
-          )}
+          {folderId !== 6
+            ? mails.map((mail) => (
+                <MailItem
+                  key={mail.id}
+                  id={mail.id}
+                  folderId={mail.folderId}
+                  author={mail.author}
+                  body={mail.body}
+                  date={mail.date}
+                  viewed={mail.viewed}
+                  favorites={mail.favorites}
+                />
+              ))
+            : favoritesMails.map((mail) => (
+                <MailItem
+                  key={mail.id}
+                  id={mail.id}
+                  folderId={mail.folderId}
+                  author={mail.author}
+                  body={mail.body}
+                  date={mail.date}
+                  viewed={mail.viewed}
+                  favorites={mail.favorites}
+                />
+              ))}
         </tbody>
       </table>
     </div>

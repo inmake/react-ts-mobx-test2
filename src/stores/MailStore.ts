@@ -53,20 +53,22 @@ class MailStore {
 
   get mailsFolder() {
     const selectedFolderId = FolderStore.selectedFolderId;
-    return this.mails.filter((mail) => mail.folderId === selectedFolderId);
+
+    if (!this.searchQuery) {
+      return this.mails.filter((mail) => mail.folderId === selectedFolderId);
+    } else {
+      return this.mails.filter(
+        (mail) =>
+          (mail.folderId === selectedFolderId || selectedFolderId === 6) &&
+          (mail.author.toLowerCase().includes(this.searchQuery) ||
+            mail.body.toLowerCase().includes(this.searchQuery) ||
+            mail.date.toLowerCase().includes(this.searchQuery))
+      );
+    }
   }
 
-  get searchedMails() {
-    if (this.searchQuery) {
-      return this.mailsFolder.filter(
-        (mail) =>
-          mail.author.toLowerCase().includes(this.searchQuery) ||
-          mail.body.toLowerCase().includes(this.searchQuery) ||
-          mail.date.includes(this.searchQuery)
-      );
-    } else {
-      return [];
-    }
+  setSearchQuery(value: string) {
+    this.searchQuery = value;
   }
 
   toggleSelectedMailIds(id: number) {
@@ -98,12 +100,8 @@ class MailStore {
   }
 
   toggleSelectAllMailIds() {
-    const selectedMails = !this.searchQuery
-      ? this.mailsFolder
-      : this.searchedMails;
-
-    if (selectedMails.length !== this.selectedMailIds.length) {
-      this.selectedMailIds = selectedMails.map((mail) => mail.id);
+    if (this.mailsFolder.length !== this.selectedMailIds.length) {
+      this.selectedMailIds = this.mailsFolder.map((mail) => mail.id);
     } else {
       this.clearSelectedMailIds();
     }
@@ -154,7 +152,17 @@ class MailStore {
   }
 
   get favoritesMails() {
-    return this.mails.filter((mail) => mail.favorites);
+    if (!this.searchQuery) {
+      return this.mails.filter((mail) => mail.favorites);
+    } else {
+      return this.mails.filter(
+        (mail) =>
+          mail.favorites &&
+          (mail.author.toLowerCase().includes(this.searchQuery) ||
+            mail.body.toLowerCase().includes(this.searchQuery) ||
+            mail.date.toLowerCase().includes(this.searchQuery))
+      );
+    }
   }
 }
 
