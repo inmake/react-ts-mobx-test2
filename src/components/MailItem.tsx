@@ -1,19 +1,31 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { StarIcon, TrashIcon } from "@heroicons/react/24/outline";
+import StarIconSolid from "@heroicons/react/24/solid/StarIcon";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent } from "react";
+import FolderStore from "../stores/FolderStore";
 import MailStore from "../stores/MailStore";
 import ModalStore from "../stores/ModalStore";
 import MailView from "./modals/MailView";
 
 interface MailItemProps {
   id: number;
+  folderId: number;
   author: string;
   body: string;
   date: string;
   viewed: boolean;
+  favorites: boolean;
 }
 
-function MailItem({ id, author, body, date, viewed }: MailItemProps) {
+function MailItem({
+  id,
+  folderId,
+  author,
+  body,
+  date,
+  viewed,
+  favorites,
+}: MailItemProps) {
   const checked = MailStore.selectedMailIds.includes(id);
   const convertedDate = `${date.slice(0, 5)} в ${date.slice(12, 17)}`;
 
@@ -33,6 +45,14 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
     MailStore.removeMail(id);
   }
 
+  function toggleFavoritesMail() {
+    MailStore.toggleFavoritesMail(id);
+  }
+
+  function updateSelectedFolderId() {
+    FolderStore.updateSelectedFolderId(folderId);
+  }
+
   return (
     <tr
       className={[
@@ -40,13 +60,36 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
         !viewed && "font-bold",
       ].join(" ")}
     >
+      {FolderStore.selectedFolderId !== 6 ? (
+        <td className="w-[5%] p-2 border-t border-b border-gray-300">
+          <input
+            type="checkbox"
+            className=""
+            checked={checked}
+            onChange={toggleSelectedMailIds}
+          />
+        </td>
+      ) : (
+        <td className="w-[15%] p-2 border-t border-b border-gray-300">
+          <div
+            className="text-blue-500 hover:text-blue-600 transition-colors truncate font-normal cursor-pointer"
+            onClick={updateSelectedFolderId}
+          >
+            {FolderStore.getFolderName(folderId)}
+          </div>
+        </td>
+      )}
       <td className="w-[5%] p-2 border-t border-b border-gray-300">
-        <input
-          type="checkbox"
-          className=""
-          checked={checked}
-          onChange={toggleSelectedMailIds}
-        />
+        <button
+          className="text-blue-500 hover:text-blue-600 transition-colors"
+          onClick={toggleFavoritesMail}
+        >
+          {!favorites ? (
+            <StarIcon className="w-5 h-5 mt-1" />
+          ) : (
+            <StarIconSolid className="w-5 h-5 mt-1" />
+          )}
+        </button>
       </td>
       <td
         className="w-[15%] p-2 border-t border-b border-gray-300 truncate"
@@ -71,7 +114,7 @@ function MailItem({ id, author, body, date, viewed }: MailItemProps) {
           className="text-blue-500 hover:text-blue-600 transition-colors"
           onClick={removeMail}
         >
-          <TrashIcon className="w-5 h-5" />
+          <TrashIcon className="w-5 h-5 mt-1" />
         </button>
       </td>
     </tr>

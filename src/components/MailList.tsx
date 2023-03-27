@@ -11,6 +11,7 @@ function MailList() {
   const searchQuery = MailStore.searchQuery;
   const searchedMails = MailStore.searchedMails;
   const mails = MailStore.mailsFolder;
+  const favoritesMails = MailStore.favoritesMails;
   const selectedMailIds = MailStore.selectedMailIds;
   const folders = FolderStore.folders;
   const folderId = FolderStore.selectedFolderId;
@@ -77,7 +78,8 @@ function MailList() {
                   </option>
                   {folders.map(
                     (folder) =>
-                      folder.id !== folderId && (
+                      folder.id !== folderId &&
+                      folder.id !== 6 && (
                         <option key={folder.id} value={folder.id}>
                           {folder.name}
                         </option>
@@ -115,35 +117,49 @@ function MailList() {
       )}
 
       <table className="table-fixed w-full border-collapse text-left">
-        {/* <thead>
-        <tr>
-          <th>Author</th>
-          <th>Body</th>
-          <th>Date</th>
-        </tr>
-      </thead> */}
         <tbody>
-          {MailStore.searchedMails.length > 0 || searchQuery !== ""
-            ? MailStore.searchedMails.map((mail) => (
-                <MailItem
-                  key={mail.id}
-                  id={mail.id}
-                  author={mail.author}
-                  body={mail.body}
-                  date={mail.date}
-                  viewed={mail.viewed}
-                />
-              ))
-            : mails.map((mail) => (
-                <MailItem
-                  key={mail.id}
-                  id={mail.id}
-                  author={mail.author}
-                  body={mail.body}
-                  date={mail.date}
-                  viewed={mail.viewed}
-                />
-              ))}
+          {MailStore.searchedMails.length > 0 || searchQuery !== "" ? (
+            MailStore.searchedMails.map((mail) => (
+              <MailItem
+                key={mail.id}
+                id={mail.id}
+                folderId={mail.folderId}
+                author={mail.author}
+                body={mail.body}
+                date={mail.date}
+                viewed={mail.viewed}
+                favorites={mail.favorites}
+              />
+            ))
+          ) : (
+            <>
+              {folderId !== 6
+                ? mails.map((mail) => (
+                    <MailItem
+                      key={mail.id}
+                      id={mail.id}
+                      folderId={mail.folderId}
+                      author={mail.author}
+                      body={mail.body}
+                      date={mail.date}
+                      viewed={mail.viewed}
+                      favorites={mail.favorites}
+                    />
+                  ))
+                : favoritesMails.map((mail) => (
+                    <MailItem
+                      key={mail.id}
+                      id={mail.id}
+                      folderId={mail.folderId}
+                      author={mail.author}
+                      body={mail.body}
+                      date={mail.date}
+                      viewed={mail.viewed}
+                      favorites={mail.favorites}
+                    />
+                  ))}
+            </>
+          )}
         </tbody>
       </table>
     </div>

@@ -40,6 +40,12 @@ class FolderStore {
       readonly: true,
       icon: "ExclamationCircleIcon",
     },
+    {
+      id: 6,
+      name: "Избранное",
+      readonly: true,
+      icon: "StarIcon",
+    },
   ];
 
   selectedFolderId = this.folders[0].id;
@@ -75,6 +81,10 @@ class FolderStore {
   removeFolder(id: number) {
     MailStore.removeAllMailsFromFolder(id);
     this.folders = this.folders.filter((folder) => folder.id !== id);
+  }
+
+  getFolderName(id: number) {
+    return this.folders.find((folder) => folder.id == id)?.name;
   }
 }
 

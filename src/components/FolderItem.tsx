@@ -13,6 +13,7 @@ import { observer } from "mobx-react-lite";
 interface FolderProps {
   id: number;
   name: string;
+  type?: string;
   readonly?: boolean;
   icon?: string;
 }
